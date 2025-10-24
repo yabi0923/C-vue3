@@ -1,0 +1,32 @@
+# === 共用 ===
+.DS_Store
+Thumbs.db
+*.log
+logs/
+*.local
+
+# === Node.js / Vue ===
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# === ASP.NET / C# ===
+Migrations/
+bin/
+obj/
+*.user
+*.suo
+*.njsproj
+*.sln
+*.sw?
+*.vs/
+
+# === IDE / Editor ===
+.vscode/
+!.vscode/extensions.json
+.idea/
