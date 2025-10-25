@@ -40,13 +40,12 @@ SQL Server Database
 - 系統入口，導引至登入或主控頁面。
 - 若已登入，顯示系統歡迎訊息與快速導向按鈕（例如「進入住戶管理」）。
 
-**主要功能：**
-- 導向登入頁面
-- 顯示系統名稱與導覽
-
 ---
 
-### 🔐 2️⃣ 登入與登出頁面（Login.vue / Logout 功能）
+### 🔐 2️⃣ 登入與登出頁面（Login.vue）
+
+![登入畫面1](./images/Login_1.png)
+
 **功能定位：**
 - 提供使用者身份驗證（管理員或住戶）。
 - 登入成功後儲存 Token 或使用者資訊（例如 localStorage）。
@@ -56,11 +55,12 @@ SQL Server Database
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
 
-**說明區塊（後續補上程式實作與流程圖）**
-
 ---
 
-### 🧍‍♂️ 3️⃣ 住戶專屬頁面（ResidentHome.vue）
+### 🧍‍♂️ 3️⃣ 住戶專屬頁面（Residents.vue）
+
+![住戶畫面1](./images/resident_1.png)
+
 **功能定位：**
 - 住戶登入後的個人主頁。
 - 顯示該住戶的基本資訊與管理費繳費狀況。
@@ -69,11 +69,22 @@ SQL Server Database
 **後端對應 API：**
 - `GET /api/residents/{id}`
 
-**說明區塊（後續補上畫面範例與資料綁定流程）**
-
 ---
 
-### 🏢 4️⃣ 住戶管理頁面（Residents.vue）
+### 🏢 4️⃣ 住戶管理頁面（ResidentsCRUD.vue）
+
+![管理畫面1](./images/CRUD_1.png)
+
+![管理畫面2](./images/CRUD_2.png)
+
+![管理畫面3](./images/CRUD_3.png)
+
+![管理畫面4](./images/CRUD_4.png)
+
+![管理畫面5](./images/CRUD_5.png)
+
+![管理畫面6](./images/CRUD_6.png)
+
 **功能定位：**
 - 管理員用介面，可查看與維護所有住戶資料。
 - 實作完整的 CRUD 功能。
