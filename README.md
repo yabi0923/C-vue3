@@ -31,6 +31,7 @@ SQL Server Database
 
 ### 🏠 1️⃣ 首頁（Home.vue）
 ![首頁畫面1](./images/home_1.png)
+
 ![首頁畫面2](./images/home_2.png)
 ![首頁畫面3](./images/home_3.png)
 **功能定位：**
