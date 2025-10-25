@@ -39,22 +39,21 @@ C-vue3/
 │   │   ├── components/      # 可重用元件 (Button, NavBar 等)
 │   │   ├── views/           # 各頁面（Home、Login、Residents等）
 │   │   ├── App.vue          # 主要應用組件
-│   │   ├── router.vue       # 
+│   │   ├── router.vue       # 設定各路徑路由
 │   │   └── main.js          # Vue 入口檔案
 │   ├── package.json         # 前端套件與指令
 │   └── vite.config.js       # Vite 設定
 │
 ├── backend/                 # 後端 C# .NET8 專案
 │   ├── Controllers/         # 控制器 (API 路由)
-│   ├── Data/                # 
+│   ├── Data/                # 資料存取層 (DbContext)
 │   ├── Models/              # 資料模型 (Entity 定義)
-│   ├── Properties/          # 
+│   ├── Properties/          # 組態屬性
 │   ├── Program.cs           # 專案進入點
 │   ├── appsettings.json     # 組態設定 (資料庫連線等)
 │   └── backend.csproj       # 專案組態
 │
 ├── images/                  # README.md使用之圖檔
-│
 ├── README.md                # 專案說明文件
 └── .gitignore               # Git 忽略設定
 ```
@@ -69,7 +68,7 @@ C-vue3/
 | **backend/** | 使用 ASP.NET Core 提供 RESTful API，負責資料處理與回傳。 |
 | **views/** | 管理前端頁面導向（如 `Home`、`Login`、`Resident`）。 |
 | **Controllers/** | 定義各 API 的端點（如 `ResidentsController`, `AuthController`）。 |
-| **Models/** | 定義資料表對應模型（如 `Dashboard`, `Resident`）。 |
+| **Models/** | 資料庫對應模型 (Entity Framework)。 |
 
 ---
 
