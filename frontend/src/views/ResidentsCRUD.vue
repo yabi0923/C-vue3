@@ -2,6 +2,9 @@
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">🏠 住戶管理系統</h1>
 
+    <!-- 操作訊息 -->
+    <p v-if="message" :class="['message', messageType]">{{ message }}</p>
+
     <!-- 搜尋框 -->
     <div class="mb-4">
       <input
@@ -97,43 +100,81 @@ const residents = ref([]);
 const newResident = ref({ name: "", roomNumber: "", managementFee: 0 });
 const searchQuery = ref("");
 
+// 操作訊息
+const message = ref("");
+const messageType = ref("info"); // info / success / error
+
 // 搜尋條件
 const filteredResidents = computed(() =>
   residents.value.filter((r) =>
     r.name.includes(searchQuery.value) ||
-    r.roomNumber.includes(searchQuery.value) 
+    r.roomNumber.includes(searchQuery.value)
   )
 );
 
 // 讀取住戶資料
 async function loadResidents() {
-  const res = await axios.get(apiBase);
-  residents.value = res.data;
+  try {
+    const res = await axios.get(apiBase);
+    residents.value = res.data;
+  } catch (err) {
+    message.value = "載入住戶資料失敗";
+    messageType.value = "error";
+  }
 }
 
 // 新增住戶
 async function createResident() {
   if (!newResident.value.name || !newResident.value.roomNumber) {
-    alert("請輸入完整的姓名與房號");
+    message.value = "請輸入完整的姓名與房號";
+    messageType.value = "error";
     return;
   }
 
-  await axios.post(apiBase, newResident.value);
-  newResident.value = { name: "", roomNumber: "", managementFee: 0 };
-  await loadResidents();
+  // 防止重複房號
+  if (residents.value.some(r => r.roomNumber === newResident.value.roomNumber)) {
+    message.value = "房號已存在，請確認";
+    messageType.value = "error";
+    return;
+  }
+
+  try {
+    await axios.post(apiBase, newResident.value);
+    newResident.value = { name: "", roomNumber: "", managementFee: 0 };
+    await loadResidents();
+    message.value = "新增住戶成功";
+    messageType.value = "success";
+  } catch (err) {
+    message.value = "新增住戶失敗";
+    messageType.value = "error";
+  }
 }
 
 // 更新住戶
 async function updateResident(r) {
-  await axios.put(`${apiBase}/${r.id}`, r);
-  await loadResidents();
+  try {
+    await axios.put(`${apiBase}/${r.id}`, r);
+    await loadResidents();
+    message.value = "更新成功";
+    messageType.value = "success";
+  } catch (err) {
+    message.value = "更新失敗";
+    messageType.value = "error";
+  }
 }
 
 // 刪除住戶
 async function deleteResident(id) {
-  if (confirm("確定要刪除此住戶嗎？")) {
+  if (!confirm("確定要刪除此住戶嗎？")) return;
+
+  try {
     await axios.delete(`${apiBase}/${id}`);
     await loadResidents();
+    message.value = "刪除成功";
+    messageType.value = "success";
+  } catch (err) {
+    message.value = "刪除失敗";
+    messageType.value = "error";
   }
 }
 
@@ -148,4 +189,12 @@ table {
 input {
   outline: none;
 }
+.message {
+  margin-bottom: 15px;
+  padding: 8px;
+  border-radius: 4px;
+}
+.message.info { background-color: #cce5ff; color: #004085; }
+.message.success { background-color: #d4edda; color: #155724; }
+.message.error { background-color: #f8d7da; color: #721c24; }
 </style>

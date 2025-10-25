@@ -3,22 +3,25 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 允許環境變數覆蓋 appsettings.json（預設已支援，但保留明示）
+// 允許環境變數覆蓋 appsettings.json
 builder.Configuration.AddEnvironmentVariables();
 
-// ✅ 加上這段註冊 DbContext
+// ✅ 註冊 DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllers();
 
-// CORS：允許前端 (調整為你的前端 origin)
+// 讀取前端 origin
+var frontendOrigin = builder.Configuration["FrontendOrigin"] ?? "http://localhost:5173";
+
+// CORS：允許前端
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // 若你的前端 port 不同請修改
+        policy.WithOrigins(frontendOrigin)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

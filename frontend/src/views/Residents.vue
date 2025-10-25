@@ -89,6 +89,9 @@
           <li v-for="item in marketplace" :key="item.id">{{ item.name }} - {{ item.status }}</li>
         </ul>
       </div>
+
+      <!-- 操作訊息 -->
+      <p v-if="message" :class="['message', messageType]">{{ message }}</p>
     </div>
   </div>
 </template>
@@ -98,9 +101,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-function goBack() {
-  router.go(-1)
-}
+function goBack() { router.go(-1) }
 
 // Tab 列
 const tabs = [
@@ -110,6 +111,10 @@ const tabs = [
   { id: 'lifeHelper', name: '生活小幫手' },
 ]
 const activeTab = ref('dashboard')
+
+// 操作訊息
+const message = ref('')
+const messageType = ref('info')
 
 // 個人訊息中心
 const parcels = ref([
@@ -126,8 +131,15 @@ const repairs = ref([
 ])
 function payBill(id) {
   const bill = bills.value.find(b => b.id === id)
-  if (bill) bill.paid = true
-  alert('繳費完成！')
+  if (!bill) return
+  if (bill.paid) {
+    message.value = '此帳單已繳費'
+    messageType.value = 'error'
+    return
+  }
+  bill.paid = true
+  message.value = '繳費完成'
+  messageType.value = 'success'
 }
 
 // 公共設施預約
@@ -138,10 +150,20 @@ const facilities = ref([
 const myBookings = ref([])
 function bookFacility(id) {
   const facility = facilities.value.find(f => f.id === id)
+  if (!facility) return
+  if (myBookings.value.some(b => b.name === facility.name)) {
+    message.value = '已預約此設施'
+    messageType.value = 'error'
+    return
+  }
   myBookings.value.push({ id: Date.now(), name: facility.name, date: new Date().toLocaleDateString() })
+  message.value = '預約成功'
+  messageType.value = 'success'
 }
 function cancelBooking(id) {
   myBookings.value = myBookings.value.filter(b => b.id !== id)
+  message.value = '已取消預約'
+  messageType.value = 'info'
 }
 
 // 社區活動
@@ -155,7 +177,15 @@ const photos = ref([
 ])
 function registerEvent(id) {
   const event = events.value.find(e => e.id === id)
+  if (!event) return
+  if (event.registered.includes('住戶A')) {
+    message.value = '已報名此活動'
+    messageType.value = 'error'
+    return
+  }
   event.registered.push('住戶A')
+  message.value = '報名成功'
+  messageType.value = 'success'
 }
 
 // 生活小幫手
@@ -175,6 +205,7 @@ const marketplace = ref([
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 .tab-menu button {
   padding: 8px 16px;
@@ -189,6 +220,17 @@ const marketplace = ref([
 }
 
 .tab-content h2 { color: #2c3e50; margin-top: 0; }
-.event-photo { width: 100px; height: 100px; margin-right: 10px; margin-bottom: 10px; }
+.event-photo { width: 100px; height: 100px; margin-right: 10px; margin-bottom: 10px; object-fit: cover; }
+.photos { display: flex; flex-wrap: wrap; }
+
+.message {
+  margin-top: 15px;
+  padding: 8px;
+  border-radius: 4px;
+}
+.message.success { background-color: #d4edda; color: #155724; }
+.message.error { background-color: #f8d7da; color: #721c24; }
+.message.info { background-color: #cce5ff; color: #004085; }
+
 button { margin-left: 10px; cursor: pointer; }
 </style>

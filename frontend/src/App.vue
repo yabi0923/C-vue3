@@ -6,10 +6,18 @@
         <router-link to="/residents">住戶</router-link>
         <router-link to="/residentsCRUD">CRUD 管理</router-link>
       </div>
-      <button v-if="token" @click="logout" class="logout-btn">登出</button>
-    </nav>
 
-    <!-- 加上上方空白，避免被固定導覽列遮住 -->
+      <!-- 登出按鈕：登入時顯示 -->
+      <button
+        v-if="isLoggedIn"
+        @click="logout"
+        class="logout-btn"
+        type="button"
+        aria-label="登出"
+      >
+        登出
+      </button>
+    </nav>
     <div class="content">
       <router-view />
     </div>
@@ -17,14 +25,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
-const token = ref(localStorage.getItem('token'))
 
-// 每次路由變化時都重新檢查 token
+// ===== 登入狀態處理 =====
+const token = ref(localStorage.getItem('token'))
+const isLoggedIn = computed(() => !!token.value)
+
+// 每次路由變化時重新檢查 token
 watch(
   () => route.fullPath,
   () => {
@@ -32,38 +43,59 @@ watch(
   }
 )
 
-window.addEventListener('storage', () => {
-  token.value = localStorage.getItem('token')
+// storage 事件監聽（跨分頁同步登入狀態）
+function onStorage(e) {
+  if (e.key === 'token') {
+    token.value = e.newValue
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('storage', onStorage)
 })
 
+onUnmounted(() => {
+  window.removeEventListener('storage', onStorage)
+})
+
+// ===== 登出邏輯 =====
 function logout() {
   localStorage.removeItem('token')
   localStorage.removeItem('username')
   token.value = null
-  router.push('/login')
+  router.replace('/login') // 使用 replace 避免返回受保護頁面
 }
 </script>
 
 <style scoped>
+:root {
+  --navbar-height: 60px;
+}
+
 .navbar {
-  position: fixed; /* 固定在畫面上方 */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  height: var(--navbar-height);
   z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #3b82f6;
-  padding: 10px 20px;
+  padding: 0 20px;
   color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
 }
 
 .nav-links a {
   color: white;
   text-decoration: none;
-  margin-right: 15px;
   font-weight: 500;
   transition: color 0.2s;
 }
@@ -78,7 +110,7 @@ function logout() {
   border: none;
   padding: 6px 12px;
   border-radius: 6px;
-  margin-right: 30px;
+  margin-right: 25px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -87,8 +119,12 @@ function logout() {
   background-color: #b91c1c;
 }
 
-/* 為內容預留空間，避免被固定導覽列遮住 */
+.logout-btn:focus-visible {
+  outline: 2px solid #dbeafe;
+  outline-offset: 2px;
+}
+
 .content {
-  padding-top: 60px;
+  padding-top: var(--navbar-height);
 }
 </style>
