@@ -33,7 +33,9 @@ SQL Server Database
 ![首頁畫面1](./images/home_1.png)
 
 ![首頁畫面2](./images/home_2.png)
+
 ![首頁畫面3](./images/home_3.png)
+
 **功能定位：**
 - 系統入口，導引至登入或主控頁面。
 - 若已登入，顯示系統歡迎訊息與快速導向按鈕（例如「進入住戶管理」）。
