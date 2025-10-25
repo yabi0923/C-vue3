@@ -36,7 +36,7 @@ C-vue3/
 │   ├── public/              # 靜態資源（icon、logo等）
 │   ├── src/
 │   │   ├── assets/          # 圖片資源
-│   │   ├── components/      # 可重用元件 (Button, NavBar 等)
+│   │   ├── components/      # 可重用元件
 │   │   ├── views/           # 各頁面（Home、Login、Residents等）
 │   │   ├── App.vue          # 主要應用組件
 │   │   ├── router.vue       # 設定各路徑路由
