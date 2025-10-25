@@ -18,9 +18,6 @@ ASP.NET Core Web API (Backend)
 ⇅
 SQL Server Database
 
-yaml
-複製程式碼
-
 ---
 
 ## 🗂️ 專案目錄概觀
